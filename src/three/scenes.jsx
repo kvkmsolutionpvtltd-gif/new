@@ -2,6 +2,7 @@ import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { Float } from '@react-three/drei';
+import EagleParticles from './EagleParticles';
 
 const BLUE = '#3a8dff';
 const CYAN = '#35e3e3';
@@ -353,6 +354,130 @@ export function ProductRing({ scale = 1, count = 7, ...props }) {
           </Float>
         );
       })}
+    </group>
+  );
+}
+
+/* ============ Dedicated deliverable showcases ============ */
+
+/** APPS — a fan of phones flipping and orbiting, one central hero device. */
+export function AppsShowcase({ scale = 1, mobile = false, ...props }) {
+  const g = useRef();
+  const hero = useRef();
+  const cols = ['#3a8dff', '#35e3e3', '#8a6cff', '#5fd08a', '#ff8f5a'];
+  const n = mobile ? 3 : 5;
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime;
+    if (g.current) {
+      g.current.rotation.y = Math.sin(t * 0.2) * 0.4;
+      g.current.children.forEach((c, i) => {
+        c.rotation.y = Math.sin(t * 0.8 + i) * 0.6;
+        c.position.y = Math.sin(t + i * 0.7) * 0.2;
+      });
+    }
+    if (hero.current) hero.current.rotation.y += 0.01;
+  });
+  return (
+    <group scale={scale} {...props}>
+      <group ref={hero}>
+        <mesh>
+          <boxGeometry args={[1.1, 2.2, 0.1]} />
+          <meshStandardMaterial color="#0c1420" metalness={0.8} roughness={0.25} />
+        </mesh>
+        <mesh position={[0, 0, 0.06]}>
+          <planeGeometry args={[0.95, 2]} />
+          <meshStandardMaterial color="#0b2647" emissive="#3a8dff" emissiveIntensity={0.6} toneMapped={false} />
+        </mesh>
+      </group>
+      <group ref={g}>
+        {[...Array(n)].map((_, i) => {
+          const a = (i / n) * Math.PI * 2;
+          const r = 3;
+          return (
+            <group key={i} position={[Math.cos(a) * r, 0, Math.sin(a) * r]}>
+              <mesh>
+                <boxGeometry args={[0.8, 1.6, 0.08]} />
+                <meshStandardMaterial color="#0c1420" metalness={0.7} roughness={0.3} />
+              </mesh>
+              <mesh position={[0, 0, 0.05]}>
+                <planeGeometry args={[0.68, 1.44]} />
+                <meshStandardMaterial color="#0b2038" emissive={cols[i % cols.length]} emissiveIntensity={0.55} toneMapped={false} />
+              </mesh>
+            </group>
+          );
+        })}
+      </group>
+    </group>
+  );
+}
+
+/** WEBSITE — a large browser window that continuously builds its blocks. */
+export function WebsiteShowcase({ scale = 1, ...props }) {
+  const blocks = useRef([]);
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime;
+    blocks.current.forEach((b, i) => {
+      if (!b) return;
+      const cycle = (t * 0.5 + i * 0.25) % 3;
+      const grow = THREE.MathUtils.clamp(cycle, 0, 1);
+      b.scale.y = 0.05 + grow * 0.95;
+    });
+  });
+  const rows = [
+    { y: 1.5, w: 4.6, h: 0.5, c: '#3a8dff' },
+    { y: 0.7, w: 4.6, h: 1.0, c: '#35e3e3' },
+    { y: -0.5, w: 2.1, h: 1.0, c: '#8a6cff', x: -1.25 },
+    { y: -0.5, w: 2.1, h: 1.0, c: '#3a8dff', x: 1.25 },
+    { y: -1.7, w: 4.6, h: 0.5, c: '#35e3e3' },
+  ];
+  return (
+    <group scale={scale} {...props}>
+      {/* browser frame */}
+      <mesh position={[0, 0, -0.15]}>
+        <boxGeometry args={[5.4, 4.2, 0.1]} />
+        <meshStandardMaterial color="#0a1220" metalness={0.5} roughness={0.5} />
+      </mesh>
+      <lineSegments position={[0, 0, -0.05]}>
+        <edgesGeometry args={[new THREE.BoxGeometry(5.4, 4.2, 0.1)]} />
+        <lineBasicMaterial color="#3a8dff" transparent opacity={0.5} />
+      </lineSegments>
+      {/* window dots */}
+      {[-2.5, -2.3, -2.1].map((x, i) => (
+        <mesh key={i} position={[x, 1.9, 0]}>
+          <circleGeometry args={[0.06, 12]} />
+          <meshStandardMaterial color={['#ff5f56', '#ffbd2e', '#27c93f'][i]} emissive={['#ff5f56', '#ffbd2e', '#27c93f'][i]} emissiveIntensity={0.6} toneMapped={false} />
+        </mesh>
+      ))}
+      {/* building blocks */}
+      {rows.map((r, i) => (
+        <mesh key={i} ref={(el) => (blocks.current[i] = el)} position={[r.x || 0, r.y, 0.02]}>
+          <boxGeometry args={[r.w, r.h, 0.06]} />
+          <meshStandardMaterial color="#0e1a2c" emissive={r.c} emissiveIntensity={0.4} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+/** LOGO — the eagle assembling from particles inside a rotating light ring. */
+export function LogoShowcase({ scale = 1, mobile = false, ...props }) {
+  const ring = useRef();
+  const ring2 = useRef();
+  useFrame((_, d) => {
+    if (ring.current) ring.current.rotation.z += d * 0.4;
+    if (ring2.current) ring2.current.rotation.z -= d * 0.25;
+  });
+  return (
+    <group scale={scale} {...props}>
+      <EagleParticles count={mobile ? 2200 : 4200} assemble={1} scale={1.4} size={0.028} />
+      <mesh ref={ring} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[2.6, 0.02, 8, 64]} />
+        <meshStandardMaterial color="#35e3e3" emissive="#35e3e3" emissiveIntensity={0.8} toneMapped={false} />
+      </mesh>
+      <mesh ref={ring2} rotation={[Math.PI / 2.4, 0.3, 0]}>
+        <torusGeometry args={[3.1, 0.015, 8, 64]} />
+        <meshStandardMaterial color="#3a8dff" emissive="#3a8dff" emissiveIntensity={0.6} toneMapped={false} />
+      </mesh>
     </group>
   );
 }

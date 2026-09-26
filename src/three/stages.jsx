@@ -21,7 +21,11 @@ import {
   TestChambers,
   CloudDeploy,
   ProductRing,
+  AppsShowcase,
+  WebsiteShowcase,
+  LogoShowcase,
 } from './scenes';
+import CreatorScene from './Creator';
 import EagleParticles from './EagleParticles';
 
 /**
@@ -51,9 +55,29 @@ export function StageHero({ mobile }) {
   );
 }
 
+// CREATOR — a stylized human builds an app at a neat PC; output flies out in 3D
+export function StageCreator({ mobile }) {
+  return (
+    <group rotation={[0, mobile ? 0.25 : 0.42, 0]} position={[mobile ? 0 : -0.4, 0.2, 0]}>
+      <CreatorScene mobile={mobile} scale={mobile ? 0.95 : 1.15} />
+    </group>
+  );
+}
+
 // 1. IDEA
 export function StageIdea() {
   return <S><IdeaSplit scale={1.1} /></S>;
+}
+
+// APPS / WEBSITE / LOGO — dedicated deliverable showcases
+export function StageApps({ mobile }) {
+  return <S><AppsShowcase mobile={mobile} scale={mobile ? 0.8 : 1} /></S>;
+}
+export function StageWebsiteShowcase() {
+  return <S><WebsiteShowcase scale={0.9} /></S>;
+}
+export function StageLogo({ mobile }) {
+  return <LogoShowcase mobile={mobile} scale={1} />;
 }
 
 // 2. DESIGN — screens rotating around
@@ -199,21 +223,25 @@ export function StageShowcase({ mobile }) {
 }
 
 export const STAGES = [
-  StageHero,       // 0
-  StageIdea,       // 1
-  StageDesign,     // 2
-  StageLayers,     // 3
-  StageWebsite,    // 4
-  StageReact,      // 5
-  StageBackend,    // 6
-  StageDevices,    // 7
-  StageBuild,      // 8
-  StageDatabase,   // 9
-  StageApi,        // 10
-  StageEcommerce,  // 11
-  StageGame,       // 12
-  Stage3D,         // 13
-  StageTesting,    // 14
-  StageDeploy,     // 15
-  StageShowcase,   // 16
+  StageHero,            // 0
+  StageCreator,         // 1  — human builds app, output flies out
+  StageIdea,            // 2
+  StageDesign,          // 3
+  StageLayers,          // 4
+  StageWebsite,         // 5
+  StageReact,           // 6
+  StageBackend,         // 7
+  StageDevices,         // 8
+  StageBuild,           // 9
+  StageDatabase,        // 10
+  StageApi,             // 11
+  StageEcommerce,       // 12
+  StageGame,            // 13
+  Stage3D,              // 14
+  StageTesting,         // 15
+  StageDeploy,          // 16
+  StageApps,            // 17 — deliverable showcase
+  StageWebsiteShowcase, // 18
+  StageLogo,            // 19
+  StageShowcase,        // 20 — final universe + eagle
 ];

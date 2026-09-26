@@ -1,36 +1,100 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" role="img" aria-label="KVK M SOLUTIONS eagle emblem">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="KVK M SOLUTIONS bald eagle logo">
   <defs>
-    <linearGradient id="kvkEagleFill" x1="256" y1="40" x2="256" y2="470" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#eaf2ff"/>
-      <stop offset="0.45" stop-color="#8fb4dd"/>
-      <stop offset="1" stop-color="#2f6ea8"/>
+    <linearGradient id="wing" x1="256" y1="70" x2="256" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5a4636"/>
+      <stop offset="0.5" stop-color="#3d2f24"/>
+      <stop offset="1" stop-color="#241a13"/>
     </linearGradient>
-    <linearGradient id="kvkEagleEdge" x1="256" y1="40" x2="256" y2="470" gradientUnits="userSpaceOnUse">
+    <linearGradient id="body" x1="256" y1="210" x2="256" y2="470" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4a382a"/>
+      <stop offset="1" stop-color="#20160f"/>
+    </linearGradient>
+    <linearGradient id="head" x1="256" y1="150" x2="256" y2="300" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="1" stop-color="#3aa0ff"/>
+      <stop offset="1" stop-color="#d7dde3"/>
     </linearGradient>
   </defs>
-  <!-- Symmetric heraldic tech eagle, wings spread -->
-  <g fill="url(#kvkEagleFill)" stroke="url(#kvkEagleEdge)" stroke-width="2" stroke-linejoin="round">
-    <!-- head -->
-    <path d="M256 44c14 0 26 10 30 24 3 10 1 18-4 26l-8 12h-36l-8-12c-5-8-7-16-4-26 4-14 16-24 30-24z"/>
-    <!-- beak -->
-    <path d="M256 92l16 10-16 12-16-12z"/>
-    <!-- body / tail -->
-    <path d="M226 118h60l14 120-44 56-44-56z"/>
-    <!-- tail feathers -->
-    <path d="M236 300h40l-6 60-14 24-14-24z"/>
-    <!-- left wing (upper) -->
-    <path d="M226 132 C 150 120, 88 138, 34 190 C 92 176, 140 182, 176 206 C 150 200, 120 206, 100 224 C 150 214, 190 226, 214 252 L 226 210 Z"/>
-    <!-- left wing (lower feather layer) -->
-    <path d="M214 240 C 150 236, 96 252, 58 296 C 112 282, 156 288, 190 310 C 168 306, 146 312, 130 328 C 172 320, 200 330, 220 352 L 226 288 Z"/>
-    <!-- right wing (upper) mirror -->
-    <path d="M286 132 C 362 120, 424 138, 478 190 C 420 176, 372 182, 336 206 C 362 200, 392 206, 412 224 C 362 214, 322 226, 298 252 L 286 210 Z"/>
-    <!-- right wing (lower feather layer) mirror -->
-    <path d="M298 240 C 362 236, 416 252, 454 296 C 400 282, 356 288, 322 310 C 344 306, 366 312, 382 328 C 340 320, 312 330, 292 352 L 286 288 Z"/>
-  </g>
-  <!-- subtle inner detail -->
-  <g stroke="#0a1220" stroke-width="1.5" opacity="0.35">
-    <line x1="256" y1="120" x2="256" y2="356"/>
+
+  <g stroke="#0c0a08" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+    <!-- ===== one half of the wings, mirrored for symmetry ===== -->
+    <g fill="url(#wing)">
+      <!-- RIGHT wing: layered feathers sweeping up and out -->
+      <path d="M262 232
+               C 300 150, 360 96, 452 78
+               C 402 120, 372 150, 356 188
+               C 398 156, 430 150, 470 156
+               C 420 176, 388 196, 368 226
+               C 404 210, 434 214, 462 232
+               C 410 244, 372 262, 348 292
+               C 332 250, 300 236, 262 232 Z"/>
+      <!-- RIGHT wing lower feather layer -->
+      <path d="M256 268
+               C 300 262, 344 276, 372 312
+               C 336 300, 306 306, 286 326
+               C 322 320, 350 330, 372 352
+               C 330 344, 300 350, 282 368
+               C 262 330, 256 300, 256 268 Z"/>
+      <!-- LEFT wing (mirror) -->
+      <path transform="translate(512,0) scale(-1,1)" d="M262 232
+               C 300 150, 360 96, 452 78
+               C 402 120, 372 150, 356 188
+               C 398 156, 430 150, 470 156
+               C 420 176, 388 196, 368 226
+               C 404 210, 434 214, 462 232
+               C 410 244, 372 262, 348 292
+               C 332 250, 300 236, 262 232 Z"/>
+      <path transform="translate(512,0) scale(-1,1)" d="M256 268
+               C 300 262, 344 276, 372 312
+               C 336 300, 306 306, 286 326
+               C 322 320, 350 330, 372 352
+               C 330 344, 300 350, 282 368
+               C 262 330, 256 300, 256 268 Z"/>
+    </g>
+
+    <!-- ===== body ===== -->
+    <path fill="url(#body)" d="M256 236
+             C 288 236, 306 262, 306 298
+             C 306 344, 292 392, 276 430
+             L 256 470 L 236 430
+             C 220 392, 206 344, 206 298
+             C 206 262, 224 236, 256 236 Z"/>
+    <!-- body feather hints -->
+    <g fill="none" stroke="#0c0a08" stroke-width="4" opacity="0.5">
+      <path d="M240 300 q16 10 32 0"/>
+      <path d="M238 336 q18 12 36 0"/>
+      <path d="M242 372 q14 10 28 0"/>
+    </g>
+
+    <!-- ===== tail feathers ===== -->
+    <path fill="#e9edf1" d="M236 420 L256 470 L276 420 C 270 440, 242 440, 236 420 Z"/>
+
+    <!-- ===== white head ===== -->
+    <path fill="url(#head)" d="M256 150
+             C 292 150, 316 178, 316 214
+             C 316 240, 300 262, 276 270
+             C 268 248, 244 248, 236 270
+             C 212 262, 196 240, 196 214
+             C 196 178, 220 150, 256 150 Z"/>
+    <!-- head feather flick -->
+    <path fill="#c9d2da" d="M300 176 c 18 -6 30 2 40 16 c -18 -4 -30 0 -40 -16 Z"/>
+
+    <!-- ===== eye ===== -->
+    <circle cx="238" cy="204" r="9" fill="#1b140d"/>
+    <circle cx="235" cy="201" r="3" fill="#fff" stroke="none"/>
+    <path fill="none" stroke="#0c0a08" stroke-width="5" d="M224 194 q14 -8 28 0"/>
+
+    <!-- ===== beak ===== -->
+    <path fill="#f5b31f" d="M236 214
+             C 214 210, 196 216, 184 228
+             C 198 232, 210 236, 224 236
+             C 214 244, 206 252, 202 262
+             C 220 256, 234 246, 240 232 Z"/>
+    <path fill="#d98f12" d="M184 228 C 196 232, 208 236, 224 236 C 214 234, 200 230, 184 228 Z" stroke="none"/>
+
+    <!-- ===== talons ===== -->
+    <g fill="#f5b31f">
+      <path d="M232 452 c -6 10 -4 22 6 30 c 6 -6 8 -14 6 -24 Z"/>
+      <path d="M280 452 c 6 10 4 22 -6 30 c -6 -6 -8 -14 -6 -24 Z"/>
+    </g>
   </g>
 </svg>

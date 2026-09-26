@@ -17,6 +17,7 @@ import { DatabaseSection, ApiSection, BuildSection, EcommerceSection, PaymentSec
 import { GameSection, BlenderSection, WebsiteSection, MobileSection } from './sections/Craft';
 import { TeamSection, PipelineSection, TestingSection, DeploymentSection } from './sections/Team';
 import { ShowcaseSection, FinalHeroSection } from './sections/Showcase';
+import { CreatorSection, AppsSection, WebsiteShowcaseSection, LogoSection } from './sections/Deliverables';
 import { ContactSection, FinaleSection } from './sections/Contact';
 
 import { initSmoothScroll, destroySmoothScroll, stopScroll, startScroll } from './lib/smoothScroll';
@@ -69,6 +70,9 @@ export default function App() {
       <main className="content" aria-hidden={!loaded}>
         <Hero started={loaded} />
 
+        <CreatorSection />
+        <CinematicTransition variant="eagle" label="Idea" />
+
         <IdeaSection />
         <CinematicTransition variant="eagle" label="Design" />
 
@@ -98,6 +102,11 @@ export default function App() {
         <PipelineSection />
         <TestingSection />
         <DeploymentSection />
+        <CinematicTransition variant="eagle" label="Deliverables" />
+
+        <AppsSection />
+        <WebsiteShowcaseSection />
+        <LogoSection />
         <CinematicTransition variant="streak" label="The Reveal" />
 
         <ShowcaseSection />
