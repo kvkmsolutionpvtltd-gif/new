@@ -26,8 +26,10 @@ export function getPerfTier() {
   if (typeof navigator === 'undefined') return 'high';
   const cores = navigator.hardwareConcurrency || 4;
   const mem = navigator.deviceMemory || 4;
-  const small = typeof window !== 'undefined' && window.innerWidth < 820;
-  if (small || cores <= 4 || mem <= 4) return 'low';
-  if (cores <= 8 || mem <= 8) return 'mid';
+  const small = typeof window !== 'undefined' && window.innerWidth < 720;
+  // Reserve 'low' for genuinely weak/phone-class devices. A typical 4-core
+  // laptop should still get bloom + cinematic post ('mid').
+  if (small || cores <= 2 || mem <= 2) return 'low';
+  if (cores <= 4 || mem <= 4) return 'mid';
   return 'high';
 }

@@ -61,6 +61,13 @@ function Layout() {
 
       <Scene mobile={mobile} tier={tier} mode={isHome ? 'home' : 'ambient'} />
 
+      {/* Always-on cinematic overlay (film grain + vignette) */}
+      <div className="cine" aria-hidden="true">
+        <div className="cine__vignette" />
+        <div className="cine__scan" />
+        <div className="cine__grain" />
+      </div>
+
       <Cursor />
       <Navbar />
       <SoundToggle />

@@ -115,6 +115,51 @@ p {
   pointer-events: none;
 }
 
+/* ---------- Cinematic overlay (always on): vignette + film grain ---------- */
+.cine {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  pointer-events: none;
+}
+/* deep vignette + slight top/bottom crush for a filmic frame */
+.cine__vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(130% 120% at 50% 45%, transparent 52%, rgba(2, 4, 8, 0.5) 82%, rgba(2, 4, 8, 0.9) 100%),
+    linear-gradient(180deg, rgba(2, 4, 8, 0.35), transparent 14%, transparent 86%, rgba(2, 4, 8, 0.45));
+  mix-blend-mode: multiply;
+}
+/* animated film grain via fractal-noise data URI */
+.cine__grain {
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.7s steps(3) infinite;
+  will-change: transform;
+}
+/* faint horizontal scanline sheen */
+.cine__scan {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.014) 0 1px, transparent 1px 3px);
+  opacity: 0.4;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-6%, 4%); }
+  50% { transform: translate(4%, -6%); }
+  75% { transform: translate(-4%, -3%); }
+  100% { transform: translate(5%, 5%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cine__grain { animation: none; }
+}
+
 .content {
   position: relative;
   z-index: 2;

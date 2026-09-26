@@ -216,17 +216,17 @@ function SceneContents({ mobile, tier, mode }) {
       {ambient ? <AmbientWorld mobile={mobile} /> : <DollyWorld mobile={mobile} />}
       {tier !== 'low' && <FlyingEagle mobile={mobile} />}
 
-      {tier !== 'low' && (
-        <EffectComposer disableNormalPass>
-          <Bloom intensity={0.6} luminanceThreshold={0.5} luminanceSmoothing={0.22} mipmapBlur radius={0.75} />
-          {tier === 'high' && !ambient ? (
-            <DepthOfField target={[0, 0, FOCUS_Z]} focalLength={0.02} bokehScale={2.6} height={480} />
-          ) : (
-            <></>
-          )}
-          <Vignette eskil={false} offset={0.22} darkness={0.9} />
-        </EffectComposer>
-      )}
+      {/* Bloom + vignette on every tier — the core cinematic look. DoF only on
+          capable devices and only in the home cinematic mode. */}
+      <EffectComposer disableNormalPass multisampling={tier === 'low' ? 0 : 4}>
+        <Bloom intensity={0.9} luminanceThreshold={0.42} luminanceSmoothing={0.25} mipmapBlur radius={0.85} />
+        {tier === 'high' && !ambient ? (
+          <DepthOfField target={[0, 0, FOCUS_Z]} focalLength={0.02} bokehScale={3} height={480} />
+        ) : (
+          <></>
+        )}
+        <Vignette eskil={false} offset={0.28} darkness={1.0} />
+      </EffectComposer>
     </>
   );
 }
