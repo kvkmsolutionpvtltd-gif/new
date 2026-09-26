@@ -126,7 +126,14 @@ export function FinaleSection() {
             <img src="./eagle.svg" alt="" width="28" height="28" />
             KVK M SOLUTIONS
           </div>
-          <p>© {new Date().getFullYear()} KVK M SOLUTIONS · Software Development &amp; Digital Solutions</p>
+          <div style={{ textAlign: 'right' }}>
+            <p>© {new Date().getFullYear()} KVK M SOLUTIONS · Software Development &amp; Digital Solutions</p>
+            <p style={{ fontSize: '0.7rem', marginTop: 6, opacity: 0.6 }}>
+              3D: MacBook model by jackbaeten (
+              <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" style={{ textDecoration: 'underline' }}>CC BY 4.0</a>
+              ) · Robot by Tomás Laulhé (CC0)
+            </p>
+          </div>
         </div>
       </footer>
     </>

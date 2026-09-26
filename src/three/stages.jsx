@@ -1,4 +1,6 @@
-import { Float } from '@react-three/drei';
+import { Float, ContactShadows, RoundedBox, Center, Resize } from '@react-three/drei';
+import { Macbook, Robot } from './models';
+import { OutputEmitter } from './Creator';
 import {
   Monitor,
   Panel,
@@ -25,7 +27,6 @@ import {
   WebsiteShowcase,
   LogoShowcase,
 } from './scenes';
-import CreatorScene from './Creator';
 import EagleParticles from './EagleParticles';
 
 /**
@@ -41,25 +42,68 @@ function S({ children, ...p }) {
   );
 }
 
-// 0. HERO — the digital universe (everything floating together)
+// 0. HERO — a real MacBook as the centerpiece, grounded with a soft shadow
 export function StageHero({ mobile }) {
   return (
     <group>
-      <S><Monitor position={[0, 0.3, 0]} scale={mobile ? 0.9 : 1.15} rotation={[0, -0.15, 0]} /></S>
-      <S><Panel w={1.6} h={1} position={[-3.2, 1.3, -1.5]} rotation={[0, 0.4, 0]} edge="#35e3e3" /></S>
-      <S><Phone position={[3, 1.3, -0.5]} scale={0.8} rotation={[0.1, -0.5, 0.1]} /></S>
-      <S><DatabaseStack position={[-3.2, -1.4, -2]} scale={0.5} /></S>
-      <S><ServerRack position={[3.4, -1.2, -2]} scale={0.5} /></S>
-      {!mobile && <S><NodeNetwork position={[0, 0, -5]} radius={4.5} count={8} scale={0.7} /></S>}
+      <Float speed={1} rotationIntensity={0.15} floatIntensity={0.4}>
+        <group scale={mobile ? 4 : 5.4} rotation={[0.05, -0.5, 0]}>
+          <Center>
+            <Resize>
+              <Macbook />
+            </Resize>
+          </Center>
+        </group>
+      </Float>
+      <ContactShadows position={[0, -2.1, 0]} opacity={0.55} scale={14} blur={2.8} far={5} color="#000610" resolution={512} />
+      {!mobile && <S><Phone position={[3.6, 1.1, -1]} scale={0.8} rotation={[0.1, -0.5, 0.1]} /></S>}
+      {!mobile && <S><DatabaseStack position={[-3.8, -0.6, -2]} scale={0.48} /></S>}
+      {!mobile && <S><NodeNetwork position={[0, 0.4, -6]} radius={4.5} count={8} scale={0.6} /></S>}
     </group>
   );
 }
 
-// CREATOR — a stylized human builds an app at a neat PC; output flies out in 3D
+// CREATOR — a real MacBook on a desk, an animated robot maker beside it,
+// and finished apps/websites/logos flying off the screen into 3D.
 export function StageCreator({ mobile }) {
   return (
-    <group rotation={[0, mobile ? 0.25 : 0.42, 0]} position={[mobile ? 0 : -0.4, 0.2, 0]}>
-      <CreatorScene mobile={mobile} scale={mobile ? 0.95 : 1.15} />
+    <group rotation={[0, mobile ? 0.15 : 0.32, 0]} position={[0, -0.4, 0]}>
+      {/* desk */}
+      <RoundedBox args={[5.2, 0.3, 2.4]} radius={0.06} smoothness={4} position={[0, -1.35, 0.1]} receiveShadow>
+        <meshStandardMaterial color="#141c28" metalness={0.5} roughness={0.45} />
+      </RoundedBox>
+      {/* RGB desk edge */}
+      <mesh position={[0, -1.35, 1.28]}>
+        <boxGeometry args={[5.1, 0.05, 0.05]} />
+        <meshStandardMaterial color="#8a6cff" emissive="#8a6cff" emissiveIntensity={1.2} toneMapped={false} />
+      </mesh>
+
+      {/* the real laptop, open, screen glowing */}
+      <group position={[mobile ? 0 : -0.7, -1.2, 0.25]} rotation={[0, 0.25, 0]}>
+        <group scale={mobile ? 2.6 : 3.2}>
+          <Resize>
+            <Macbook />
+          </Resize>
+        </group>
+      </group>
+
+      {/* animated robot "maker" beside the desk */}
+      {!mobile && (
+        <group position={[2.5, -1.35, 0.2]} rotation={[0, -0.7, 0]}>
+          <group scale={2.4}>
+            <Resize>
+              <Robot animation="Idle" />
+            </Resize>
+          </group>
+        </group>
+      )}
+
+      {/* products flying off the screen */}
+      <group position={[mobile ? 0 : -0.6, 0.1, 0.3]} scale={0.9}>
+        <OutputEmitter />
+      </group>
+
+      <ContactShadows position={[0, -1.52, 0.1]} opacity={0.6} scale={12} blur={2.6} far={6} color="#000610" resolution={512} />
     </group>
   );
 }
@@ -189,9 +233,16 @@ export function StageGame() {
   );
 }
 
-// 13. BLENDER / 3D — morphing object
+// 13. BLENDER / 3D — a faceted asset showcasing the studio lighting/reflections
 export function Stage3D() {
-  return <S><MorphObject scale={1.1} /></S>;
+  return (
+    <group>
+      <Float speed={1.4} rotationIntensity={0.5} floatIntensity={0.6}>
+        <MorphObject scale={1.5} />
+      </Float>
+      <ContactShadows position={[0, -2.2, 0]} opacity={0.45} scale={10} blur={2.6} far={5} color="#000610" resolution={512} />
+    </group>
+  );
 }
 
 // 14. TESTING / DEBUG

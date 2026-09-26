@@ -1,7 +1,7 @@
 import { Suspense, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Stars, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
-import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
+import { Stars, AdaptiveDpr, AdaptiveEvents, Environment, Lightformer } from '@react-three/drei';
+import { EffectComposer, Bloom, Vignette, DepthOfField } from '@react-three/postprocessing';
 import * as THREE from 'three';
 import { scrollState } from '../lib/smoothScroll';
 import { STAGES } from './stages';
@@ -140,12 +140,34 @@ function SceneContents({ mobile, tier }) {
   return (
     <>
       <color attach="background" args={['#04060b']} />
-      <fog attach="fog" args={['#04060b', 8, 30]} />
+      <fog attach="fog" args={['#04060b', 9, 32]} />
 
-      <ambientLight intensity={0.35} />
-      <directionalLight position={[5, 8, 5]} intensity={0.9} color="#cfe0ff" />
+      <ambientLight intensity={0.3} />
+      <directionalLight
+        position={[5, 9, 6]}
+        intensity={1.6}
+        color="#eaf2ff"
+        castShadow
+        shadow-mapSize={[1024, 1024]}
+        shadow-camera-near={1}
+        shadow-camera-far={30}
+        shadow-camera-left={-10}
+        shadow-camera-right={10}
+        shadow-camera-top={10}
+        shadow-camera-bottom={-10}
+        shadow-bias={-0.0004}
+      />
       <pointLight position={[-6, -3, 2]} intensity={40} color="#2f6ee0" distance={30} />
       <pointLight position={[6, 4, -4]} intensity={30} color="#35e3e3" distance={30} />
+
+      {/* Studio image-based lighting — procedural, fully offline (no HDR fetch).
+          Gives real reflections on the glass/metal GLB models. */}
+      <Environment resolution={256} frames={1}>
+        <Lightformer intensity={2.4} position={[0, 5, -7]} scale={[12, 8, 1]} color="#9ec2ff" />
+        <Lightformer intensity={1.6} position={[-7, 2, 3]} scale={[8, 8, 1]} color="#ffffff" />
+        <Lightformer intensity={1.3} position={[7, -1, 3]} scale={[8, 8, 1]} color="#35e3e3" />
+        <Lightformer intensity={1.1} form="ring" position={[0, 0, -9]} scale={7} color="#8a6cff" />
+      </Environment>
 
       <Stars radius={80} depth={40} count={tier === 'low' ? 900 : 2200} factor={3} saturation={0} fade speed={0.4} />
 
@@ -153,10 +175,15 @@ function SceneContents({ mobile, tier }) {
       <DollyWorld mobile={mobile} />
       {tier !== 'low' && <FlyingEagle mobile={mobile} />}
 
-      {tier === 'high' && (
+      {tier !== 'low' && (
         <EffectComposer disableNormalPass>
-          <Bloom intensity={0.55} luminanceThreshold={0.55} luminanceSmoothing={0.2} mipmapBlur radius={0.7} />
-          <Vignette eskil={false} offset={0.25} darkness={0.85} />
+          <Bloom intensity={0.6} luminanceThreshold={0.5} luminanceSmoothing={0.22} mipmapBlur radius={0.75} />
+          {tier === 'high' ? (
+            <DepthOfField target={[0, 0, FOCUS_Z]} focalLength={0.02} bokehScale={2.6} height={480} />
+          ) : (
+            <></>
+          )}
+          <Vignette eskil={false} offset={0.22} darkness={0.9} />
         </EffectComposer>
       )}
     </>
@@ -169,6 +196,7 @@ export default function Scene({ mobile = false, tier = 'high' }) {
     <div className="scene-canvas" aria-hidden="true">
       <Canvas
         dpr={dpr}
+        shadows
         gl={{ antialias: tier !== 'low', powerPreference: 'high-performance', alpha: false }}
         camera={{ fov: mobile ? 62 : 52, near: 0.1, far: 120, position: [0, 0, CAM_Z] }}
         onCreated={({ gl }) => {

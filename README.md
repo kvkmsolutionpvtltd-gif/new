@@ -62,13 +62,30 @@ KVK M SOLUTIONS brand mark:
   logo, sample points from the artwork (or a `.glb`) and return them from
   `generateEaglePoints()` — no component changes needed.
 
-## Swapping in real 3D models (`.glb`)
+## Real 3D models (`.glb`)
 
-The scene props are procedural so the site needs **no external assets** to run.
-To use real models later, drop Draco‑compressed `.glb` files in `public/models/`
-and load them with drei's `useGLTF` inside the relevant component in
-`src/three/`, replacing the procedural mesh. The stage structure and camera rig
-stay the same.
+The hero and creator scenes use **real glTF models** in `public/models/`, loaded
+via drei's `useGLTF` in `src/three/models.jsx`:
+
+- `macbook.glb` — photoreal laptop centerpiece (meshopt-compressed; drei decodes
+  it automatically). **CC BY 4.0**, attribution required.
+- `robot.glb` — the animated "maker" robot in the creator scene (CC0).
+
+See **ATTRIBUTIONS.md** for full credits. Everything else in the scenes is
+procedural, so the site still runs even if a model is missing.
+
+**Studio look:** realism comes from procedural image-based lighting
+(`<Environment>` + `<Lightformer>` in `src/three/Scene.jsx`, fully offline — no
+HDR fetch), soft shadow-mapping, `<ContactShadows>` grounding, and a
+Bloom + Depth-of-Field + Vignette post pipeline (scaled by device tier).
+
+### Swap in your own models
+
+Drop a `.glb` into `public/models/`, then point the path in
+`src/three/models.jsx` at it. Models are normalized with drei's `<Resize>` so
+you don't need to guess scale. Use models you own or that are licensed for
+commercial use, and keep `ATTRIBUTIONS.md` current. Draco-compressed models
+also work if you self-host the decoder (`useGLTF.setDecoderPath('/draco/')`).
 
 ## Performance
 

@@ -116,7 +116,7 @@ function Figure() {
 }
 
 /** Products rising out of the monitor and flying into 3D space. */
-function OutputEmitter() {
+export function OutputEmitter() {
   const items = useMemo(
     () => [
       { kind: 'phone', color: '#3a8dff', off: 0.0 },
