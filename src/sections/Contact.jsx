@@ -131,7 +131,7 @@ export function FinaleSection() {
             <p style={{ fontSize: '0.7rem', marginTop: 6, opacity: 0.6 }}>
               3D: MacBook model by jackbaeten (
               <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" style={{ textDecoration: 'underline' }}>CC BY 4.0</a>
-              ) · Robot by Tomás Laulhé (CC0)
+              )
             </p>
           </div>
         </div>

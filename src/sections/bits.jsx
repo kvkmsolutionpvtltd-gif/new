@@ -31,3 +31,19 @@ export function Section({ id, children, style }) {
     </section>
   );
 }
+
+/** Tall hero for inner pages. */
+export function PageHero({ eyebrow, title, lead, children }) {
+  return (
+    <header className="pagehero">
+      <div className="section__inner">
+        <Reveal stagger>
+          {eyebrow && <p className="eyebrow">{eyebrow}</p>}
+          <h1 className="display">{title}</h1>
+          {lead && <p className="lead">{lead}</p>}
+          {children}
+        </Reveal>
+      </div>
+    </header>
+  );
+}

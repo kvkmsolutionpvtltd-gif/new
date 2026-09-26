@@ -1,5 +1,5 @@
 import { Float, ContactShadows, RoundedBox, Center, Resize } from '@react-three/drei';
-import { Macbook, Robot } from './models';
+import { Macbook } from './models';
 import { OutputEmitter } from './Creator';
 import {
   Monitor,
@@ -63,47 +63,30 @@ export function StageHero({ mobile }) {
   );
 }
 
-// CREATOR — a real MacBook on a desk, an animated robot maker beside it,
-// and finished apps/websites/logos flying off the screen into 3D.
+// BUILD — the software builds itself. A real laptop, code streams and finished
+// products (apps/websites/logos) rising off the screen. No people.
 export function StageCreator({ mobile }) {
   return (
-    <group rotation={[0, mobile ? 0.15 : 0.32, 0]} position={[0, -0.4, 0]}>
-      {/* desk */}
-      <RoundedBox args={[5.2, 0.3, 2.4]} radius={0.06} smoothness={4} position={[0, -1.35, 0.1]} receiveShadow>
-        <meshStandardMaterial color="#141c28" metalness={0.5} roughness={0.45} />
-      </RoundedBox>
-      {/* RGB desk edge */}
-      <mesh position={[0, -1.35, 1.28]}>
-        <boxGeometry args={[5.1, 0.05, 0.05]} />
-        <meshStandardMaterial color="#8a6cff" emissive="#8a6cff" emissiveIntensity={1.2} toneMapped={false} />
-      </mesh>
+    <group rotation={[0, mobile ? 0.12 : 0.28, 0]} position={[0, -0.2, 0]}>
+      <CodeStreams columns={mobile ? 14 : 26} height={16} color="#3a8dff" position={[0, 0, -5]} />
 
-      {/* the real laptop, open, screen glowing */}
-      <group position={[mobile ? 0 : -0.7, -1.2, 0.25]} rotation={[0, 0.25, 0]}>
-        <group scale={mobile ? 2.6 : 3.2}>
-          <Resize>
-            <Macbook />
-          </Resize>
-        </group>
-      </group>
-
-      {/* animated robot "maker" beside the desk */}
-      {!mobile && (
-        <group position={[2.5, -1.35, 0.2]} rotation={[0, -0.7, 0]}>
-          <group scale={2.4}>
+      {/* the real laptop, open, screen glowing — a device, not a person */}
+      <Float speed={1} rotationIntensity={0.12} floatIntensity={0.4}>
+        <group position={[0, 0, 0]} rotation={[0.03, -0.35, 0]}>
+          <group scale={mobile ? 3.6 : 4.8}>
             <Resize>
-              <Robot animation="Idle" />
+              <Macbook />
             </Resize>
           </group>
         </group>
-      )}
+      </Float>
 
       {/* products flying off the screen */}
-      <group position={[mobile ? 0 : -0.6, 0.1, 0.3]} scale={0.9}>
+      <group position={[0, 0.4, 0.3]} scale={0.95}>
         <OutputEmitter />
       </group>
 
-      <ContactShadows position={[0, -1.52, 0.1]} opacity={0.6} scale={12} blur={2.6} far={6} color="#000610" resolution={512} />
+      <ContactShadows position={[0, -2, 0.1]} opacity={0.5} scale={13} blur={2.7} far={6} color="#000610" resolution={512} />
     </group>
   );
 }

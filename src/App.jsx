@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -7,34 +8,37 @@ import Navbar from './components/Navbar';
 import Cursor from './components/Cursor';
 import SoundToggle from './components/SoundToggle';
 import ScrollProgress from './components/ScrollProgress';
-import CinematicTransition from './components/CinematicTransition';
+import PageTransition from './components/PageTransition';
+import Footer from './components/Footer';
 import Scene from './three/Scene';
 
-import Hero from './sections/Hero';
-import { IdeaSection, DesignSection, CreativeSection } from './sections/Story';
-import { TechnologySection, MassiveCodeSection, DayNightSection } from './sections/Technology';
-import { DatabaseSection, ApiSection, BuildSection, EcommerceSection, PaymentSection } from './sections/Systems';
-import { GameSection, BlenderSection, WebsiteSection, MobileSection } from './sections/Craft';
-import { TeamSection, PipelineSection, TestingSection, DeploymentSection } from './sections/Team';
-import { ShowcaseSection, FinalHeroSection } from './sections/Showcase';
-import { CreatorSection, AppsSection, WebsiteShowcaseSection, LogoSection } from './sections/Deliverables';
-import { ContactSection, FinaleSection } from './sections/Contact';
+import Home from './pages/Home';
+import About from './pages/About';
+import Services from './pages/Services';
+import ServiceDetail from './pages/ServiceDetail';
+import Solutions from './pages/Solutions';
+import Technologies from './pages/Technologies';
+import CaseStudies from './pages/CaseStudies';
+import Process from './pages/Process';
+import Blog from './pages/Blog';
+import Contact from './pages/Contact';
+import NotFound from './pages/NotFound';
 
 import { initSmoothScroll, destroySmoothScroll, stopScroll, startScroll } from './lib/smoothScroll';
 import { useIsMobile, getPerfTier, usePrefersReducedMotion } from './lib/hooks';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function App() {
+function Layout() {
   const [loaded, setLoaded] = useState(false);
   const mobile = useIsMobile();
   const reduced = usePrefersReducedMotion();
   const [tier] = useState(() => getPerfTier());
+  const { pathname } = useLocation();
+  const isHome = pathname === '/';
 
-  // Smooth scroll lifecycle
   useEffect(() => {
     initSmoothScroll({ reducedMotion: reduced });
-    // lock scroll until loader finishes
     stopScroll();
     window.scrollTo(0, 0);
     return () => destroySmoothScroll();
@@ -43,15 +47,11 @@ export default function App() {
   useEffect(() => {
     if (!loaded) return;
     startScroll();
-    // content is in; recalc triggers a couple of times as layout settles
     const t1 = setTimeout(() => ScrollTrigger.refresh(), 60);
     const t2 = setTimeout(() => ScrollTrigger.refresh(), 500);
-    const onLoad = () => ScrollTrigger.refresh();
-    window.addEventListener('load', onLoad);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
-      window.removeEventListener('load', onLoad);
     };
   }, [loaded]);
 
@@ -59,62 +59,38 @@ export default function App() {
     <>
       {!loaded && <OpeningSequence onDone={() => setLoaded(true)} />}
 
-      {/* Persistent WebGL background — the continuous camera journey */}
-      <Scene mobile={mobile} tier={tier} />
+      <Scene mobile={mobile} tier={tier} mode={isHome ? 'home' : 'ambient'} />
 
       <Cursor />
       <Navbar />
       <SoundToggle />
-      {loaded && <ScrollProgress />}
+      {isHome && loaded && <ScrollProgress />}
+      <PageTransition />
 
       <main className="content" aria-hidden={!loaded}>
-        <Hero started={loaded} />
-
-        <CreatorSection />
-        <CinematicTransition variant="eagle" label="Idea" />
-
-        <IdeaSection />
-        <CinematicTransition variant="eagle" label="Design" />
-
-        <DesignSection />
-        <CreativeSection />
-        <CinematicTransition variant="code" label="Engineering" />
-
-        <TechnologySection />
-        <MassiveCodeSection />
-        <DayNightSection />
-        <CinematicTransition variant="streak" label="Systems" />
-
-        <DatabaseSection />
-        <ApiSection />
-        <BuildSection />
-        <EcommerceSection />
-        <PaymentSection />
-        <CinematicTransition variant="eagle" label="Craft" />
-
-        <GameSection />
-        <BlenderSection />
-        <WebsiteSection />
-        <MobileSection />
-        <CinematicTransition variant="code" label="Team & Process" />
-
-        <TeamSection />
-        <PipelineSection />
-        <TestingSection />
-        <DeploymentSection />
-        <CinematicTransition variant="eagle" label="Deliverables" />
-
-        <AppsSection />
-        <WebsiteShowcaseSection />
-        <LogoSection />
-        <CinematicTransition variant="streak" label="The Reveal" />
-
-        <ShowcaseSection />
-        <FinalHeroSection />
-
-        <ContactSection />
-        <FinaleSection />
+        <Routes>
+          <Route path="/" element={<Home started={loaded} />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/services/:slug" element={<ServiceDetail />} />
+          <Route path="/solutions" element={<Solutions />} />
+          <Route path="/technologies" element={<Technologies />} />
+          <Route path="/case-studies" element={<CaseStudies />} />
+          <Route path="/process" element={<Process />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Footer />
       </main>
     </>
+  );
+}
+
+export default function App() {
+  return (
+    <HashRouter>
+      <Layout />
+    </HashRouter>
   );
 }

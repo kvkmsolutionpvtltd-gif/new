@@ -1,13 +1,15 @@
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { scrollTo } from '../lib/smoothScroll';
 import { usePrefersReducedMotion } from '../lib/hooks';
 
-const WORDS = ['WE', 'BUILD', 'DIGITAL', 'WORLDS'];
+const WORDS = ['WE', 'BUILD', 'DIGITAL', 'EXPERIENCES'];
 
 export default function Hero({ started }) {
   const ref = useRef(null);
   const reduced = usePrefersReducedMotion();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!started) return;
@@ -30,7 +32,9 @@ export default function Hero({ started }) {
     return () => ctx.revert();
   }, [started, reduced]);
 
-  const go = (href) => {
+  // kept for potential in-page anchors
+  // eslint-disable-next-line no-unused-vars
+  const scrollToId = (href) => {
     const t = document.querySelector(href);
     if (t) scrollTo(t);
   };
@@ -47,14 +51,14 @@ export default function Hero({ started }) {
           ))}
         </h1>
         <p className="hero__sub" data-hero-fade>
-          Software • Apps • Websites • Games • Design • Technology
+          Software, web, mobile and digital solutions built around real business needs.
         </p>
         <div className="btn-row" data-hero-fade>
-          <button className="btn btn--primary" onClick={() => go('#work')} data-cursor="button">
-            EXPLORE <span className="btn__arrow">→</span>
+          <button className="btn btn--primary" onClick={() => navigate('/contact')} data-cursor="button">
+            START A PROJECT <span className="btn__arrow">→</span>
           </button>
-          <button className="btn" onClick={() => go('#contact')} data-cursor="button">
-            START A PROJECT
+          <button className="btn" onClick={() => navigate('/services')} data-cursor="button">
+            EXPLORE OUR SERVICES
           </button>
         </div>
       </div>

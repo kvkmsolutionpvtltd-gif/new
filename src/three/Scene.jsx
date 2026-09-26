@@ -1,10 +1,11 @@
 import { Suspense, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Stars, AdaptiveDpr, AdaptiveEvents, Environment, Lightformer } from '@react-three/drei';
+import { Stars, AdaptiveDpr, AdaptiveEvents, Environment, Lightformer, Float } from '@react-three/drei';
 import { EffectComposer, Bloom, Vignette, DepthOfField } from '@react-three/postprocessing';
 import * as THREE from 'three';
 import { scrollState } from '../lib/smoothScroll';
 import { STAGES } from './stages';
+import { Monitor, Phone, DatabaseStack, NodeNetwork } from './objects';
 import EagleParticles from './EagleParticles';
 
 const SPACING = 15; // world units between stages
@@ -136,7 +137,47 @@ function CameraController({ mobile }) {
   return null;
 }
 
-function SceneContents({ mobile, tier }) {
+/** Calm ambient world for inner pages — a few floating props, no scroll dolly. */
+function AmbientWorld({ mobile }) {
+  return (
+    <group position={[0, 0, -4]}>
+      <Float speed={1} rotationIntensity={0.2} floatIntensity={0.6}>
+        <Monitor position={[mobile ? 0 : 3.2, 0.6, -1]} scale={mobile ? 0.7 : 0.9} rotation={[0, -0.5, 0]} />
+      </Float>
+      {!mobile && (
+        <>
+          <Float speed={1.3} floatIntensity={0.7}><Phone position={[-3.6, -0.6, 0]} scale={0.8} rotation={[0.1, 0.5, 0]} /></Float>
+          <Float speed={0.9} floatIntensity={0.6}><DatabaseStack position={[-3, 1.4, -2]} scale={0.4} /></Float>
+          <Float speed={1.1} floatIntensity={0.6}><NodeNetwork position={[3, -1.4, -2]} radius={2.6} count={7} scale={0.5} /></Float>
+        </>
+      )}
+    </group>
+  );
+}
+
+/** Gentle drifting camera for ambient mode (no scroll coupling). */
+function AmbientCamera({ mobile }) {
+  const { camera } = useThree();
+  const smooth = useRef({ x: 0, y: 0 });
+  useMemo(() => {
+    camera.position.set(0, 0, CAM_Z);
+    camera.lookAt(FOCUS);
+  }, [camera]);
+  useFrame(({ pointer, clock }, delta) => {
+    const t = clock.elapsedTime;
+    const s = smooth.current;
+    const k = 1 - Math.pow(0.002, delta);
+    s.x += (pointer.x * (mobile ? 0.4 : 1) + Math.sin(t * 0.1) * 0.6 - s.x) * k * 0.5;
+    s.y += (pointer.y * (mobile ? 0.25 : 0.6) + Math.cos(t * 0.08) * 0.3 - s.y) * k * 0.5;
+    camera.position.x += (s.x - camera.position.x) * Math.min(1, delta * 3);
+    camera.position.y += (s.y - camera.position.y) * Math.min(1, delta * 3);
+    camera.lookAt(FOCUS);
+  });
+  return null;
+}
+
+function SceneContents({ mobile, tier, mode }) {
+  const ambient = mode === 'ambient';
   return (
     <>
       <color attach="background" args={['#04060b']} />
@@ -171,14 +212,14 @@ function SceneContents({ mobile, tier }) {
 
       <Stars radius={80} depth={40} count={tier === 'low' ? 900 : 2200} factor={3} saturation={0} fade speed={0.4} />
 
-      <CameraController mobile={mobile} />
-      <DollyWorld mobile={mobile} />
+      {ambient ? <AmbientCamera mobile={mobile} /> : <CameraController mobile={mobile} />}
+      {ambient ? <AmbientWorld mobile={mobile} /> : <DollyWorld mobile={mobile} />}
       {tier !== 'low' && <FlyingEagle mobile={mobile} />}
 
       {tier !== 'low' && (
         <EffectComposer disableNormalPass>
           <Bloom intensity={0.6} luminanceThreshold={0.5} luminanceSmoothing={0.22} mipmapBlur radius={0.75} />
-          {tier === 'high' ? (
+          {tier === 'high' && !ambient ? (
             <DepthOfField target={[0, 0, FOCUS_Z]} focalLength={0.02} bokehScale={2.6} height={480} />
           ) : (
             <></>
@@ -190,7 +231,7 @@ function SceneContents({ mobile, tier }) {
   );
 }
 
-export default function Scene({ mobile = false, tier = 'high' }) {
+export default function Scene({ mobile = false, tier = 'high', mode = 'home' }) {
   const dpr = tier === 'low' ? [1, 1.3] : tier === 'mid' ? [1, 1.7] : [1, 2];
   return (
     <div className="scene-canvas" aria-hidden="true">
@@ -205,7 +246,7 @@ export default function Scene({ mobile = false, tier = 'high' }) {
         }}
       >
         <Suspense fallback={null}>
-          <SceneContents mobile={mobile} tier={tier} />
+          <SceneContents mobile={mobile} tier={tier} mode={mode} />
         </Suspense>
         <AdaptiveDpr pixelated />
         <AdaptiveEvents />
