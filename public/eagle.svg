@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" role="img" aria-label="KVK M SOLUTIONS eagle emblem">
+  <defs>
+    <linearGradient id="kvkEagleFill" x1="256" y1="40" x2="256" y2="470" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#eaf2ff"/>
+      <stop offset="0.45" stop-color="#8fb4dd"/>
+      <stop offset="1" stop-color="#2f6ea8"/>
+    </linearGradient>
+    <linearGradient id="kvkEagleEdge" x1="256" y1="40" x2="256" y2="470" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#3aa0ff"/>
+    </linearGradient>
+  </defs>
+  <!-- Symmetric heraldic tech eagle, wings spread -->
+  <g fill="url(#kvkEagleFill)" stroke="url(#kvkEagleEdge)" stroke-width="2" stroke-linejoin="round">
+    <!-- head -->
+    <path d="M256 44c14 0 26 10 30 24 3 10 1 18-4 26l-8 12h-36l-8-12c-5-8-7-16-4-26 4-14 16-24 30-24z"/>
+    <!-- beak -->
+    <path d="M256 92l16 10-16 12-16-12z"/>
+    <!-- body / tail -->
+    <path d="M226 118h60l14 120-44 56-44-56z"/>
+    <!-- tail feathers -->
+    <path d="M236 300h40l-6 60-14 24-14-24z"/>
+    <!-- left wing (upper) -->
+    <path d="M226 132 C 150 120, 88 138, 34 190 C 92 176, 140 182, 176 206 C 150 200, 120 206, 100 224 C 150 214, 190 226, 214 252 L 226 210 Z"/>
+    <!-- left wing (lower feather layer) -->
+    <path d="M214 240 C 150 236, 96 252, 58 296 C 112 282, 156 288, 190 310 C 168 306, 146 312, 130 328 C 172 320, 200 330, 220 352 L 226 288 Z"/>
+    <!-- right wing (upper) mirror -->
+    <path d="M286 132 C 362 120, 424 138, 478 190 C 420 176, 372 182, 336 206 C 362 200, 392 206, 412 224 C 362 214, 322 226, 298 252 L 286 210 Z"/>
+    <!-- right wing (lower feather layer) mirror -->
+    <path d="M298 240 C 362 236, 416 252, 454 296 C 400 282, 356 288, 322 310 C 344 306, 366 312, 382 328 C 340 320, 312 330, 292 352 L 286 288 Z"/>
+  </g>
+  <!-- subtle inner detail -->
+  <g stroke="#0a1220" stroke-width="1.5" opacity="0.35">
+    <line x1="256" y1="120" x2="256" y2="356"/>
+  </g>
+</svg>
