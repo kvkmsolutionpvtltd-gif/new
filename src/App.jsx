@@ -2,15 +2,16 @@ import { useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import Loader from './components/Loader';
+import OpeningSequence from './components/OpeningSequence';
 import Navbar from './components/Navbar';
 import Cursor from './components/Cursor';
 import SoundToggle from './components/SoundToggle';
+import ScrollProgress from './components/ScrollProgress';
 import CinematicTransition from './components/CinematicTransition';
 import Scene from './three/Scene';
 
 import Hero from './sections/Hero';
-import { IdeaSection, DesignSection, CreativeSection, DeveloperSection } from './sections/Story';
+import { IdeaSection, DesignSection, CreativeSection } from './sections/Story';
 import { TechnologySection, MassiveCodeSection, DayNightSection } from './sections/Technology';
 import { DatabaseSection, ApiSection, BuildSection, EcommerceSection, PaymentSection } from './sections/Systems';
 import { GameSection, BlenderSection, WebsiteSection, MobileSection } from './sections/Craft';
@@ -55,7 +56,7 @@ export default function App() {
 
   return (
     <>
-      {!loaded && <Loader onDone={() => setLoaded(true)} />}
+      {!loaded && <OpeningSequence onDone={() => setLoaded(true)} />}
 
       {/* Persistent WebGL background — the continuous camera journey */}
       <Scene mobile={mobile} tier={tier} />
@@ -63,6 +64,7 @@ export default function App() {
       <Cursor />
       <Navbar />
       <SoundToggle />
+      {loaded && <ScrollProgress />}
 
       <main className="content" aria-hidden={!loaded}>
         <Hero started={loaded} />
@@ -72,7 +74,6 @@ export default function App() {
 
         <DesignSection />
         <CreativeSection />
-        <DeveloperSection />
         <CinematicTransition variant="code" label="Engineering" />
 
         <TechnologySection />

@@ -7,6 +7,7 @@ import './components/Loader.css';
 import './components/Navbar.css';
 import './components/Cursor.css';
 import './components/SoundToggle.css';
+import './components/ScrollProgress.css';
 import './components/CinematicTransition.css';
 import './sections/sections.css';
 

@@ -83,22 +83,55 @@ function FlyingEagle({ mobile }) {
   );
 }
 
-/** Camera rig: fixed dolly forward feel + mouse parallax. */
-function Rig() {
+/**
+ * CameraController — scroll-driven cinematic camera. On top of the world dolly
+ * (stages travel past), the camera orbits and zooms as it passes through each
+ * scene, adds mouse parallax and a subtle velocity roll. Never teleports:
+ * everything is smoothed.
+ */
+const FOCUS = new THREE.Vector3(0, 0, FOCUS_Z);
+const _pos = new THREE.Vector3();
+
+function CameraController({ mobile }) {
   const { camera } = useThree();
-  const target = useRef({ x: 0, y: 0 });
+  const smooth = useRef({ x: 0, y: 0, roll: 0, orbit: 0, zoom: 0 });
+  const n = STAGES.length;
 
   useMemo(() => {
     camera.position.set(0, 0, CAM_Z);
-    camera.lookAt(0, 0, -5);
+    camera.lookAt(FOCUS);
   }, [camera]);
 
-  useFrame(({ pointer }) => {
-    target.current.x += (pointer.x * 0.8 - target.current.x) * 0.05;
-    target.current.y += (pointer.y * 0.5 - target.current.y) * 0.05;
-    camera.position.x += (target.current.x - camera.position.x) * 0.1;
-    camera.position.y += (target.current.y - camera.position.y) * 0.1;
-    camera.lookAt(0, 0, camera.position.z - 9);
+  useFrame(({ pointer }, delta) => {
+    const p = scrollState.progress;
+    const sp = p * (n - 1);
+    const f = sp - Math.floor(sp); // 0..1 within the current scene
+    const bell = Math.sin(f * Math.PI); // peaks mid-scene
+
+    const orbitAmt = mobile ? 0.25 : 0.6; // radians swept per scene
+    const orbitTarget = (f - 0.5) * orbitAmt;
+    const zoomTarget = bell * (mobile ? 0.8 : 1.6); // pull in mid-scene
+
+    const s = smooth.current;
+    const k = 1 - Math.pow(0.001, delta); // frame-rate independent smoothing
+    s.orbit += (orbitTarget - s.orbit) * k;
+    s.zoom += (zoomTarget - s.zoom) * k;
+    s.x += (pointer.x * (mobile ? 0.3 : 0.9) - s.x) * k * 0.6;
+    s.y += (pointer.y * (mobile ? 0.2 : 0.55) - s.y) * k * 0.6;
+
+    // velocity-based roll for a filmic feel
+    const velRoll = THREE.MathUtils.clamp((scrollState.velocity || 0) * 0.004, -0.12, 0.12);
+    s.roll += (velRoll - s.roll) * k * 0.5;
+
+    // orbit around the focus point
+    const dist = (CAM_Z - FOCUS_Z) - s.zoom;
+    _pos.set(Math.sin(s.orbit) * dist, 0, Math.cos(s.orbit) * dist).add(FOCUS);
+    _pos.x += s.x;
+    _pos.y += s.y;
+
+    camera.position.lerp(_pos, Math.min(1, delta * 6));
+    camera.lookAt(FOCUS);
+    camera.rotation.z += s.roll;
   });
   return null;
 }
@@ -116,7 +149,7 @@ function SceneContents({ mobile, tier }) {
 
       <Stars radius={80} depth={40} count={tier === 'low' ? 900 : 2200} factor={3} saturation={0} fade speed={0.4} />
 
-      <Rig />
+      <CameraController mobile={mobile} />
       <DollyWorld mobile={mobile} />
       {tier !== 'low' && <FlyingEagle mobile={mobile} />}
 

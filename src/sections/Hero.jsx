@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import { scrollTo } from '../lib/smoothScroll';
 import { usePrefersReducedMotion } from '../lib/hooks';
 
-const WORDS = ['WE', 'BUILD', 'DIGITAL', 'EXPERIENCES'];
+const WORDS = ['WE', 'BUILD', 'DIGITAL', 'WORLDS'];
 
 export default function Hero({ started }) {
   const ref = useRef(null);
@@ -47,11 +47,11 @@ export default function Hero({ started }) {
           ))}
         </h1>
         <p className="hero__sub" data-hero-fade>
-          Websites. Apps. Platforms. Games. Designs. Digital&nbsp;Products.
+          Software • Apps • Websites • Games • Design • Technology
         </p>
         <div className="btn-row" data-hero-fade>
           <button className="btn btn--primary" onClick={() => go('#work')} data-cursor="button">
-            EXPLORE OUR WORK <span className="btn__arrow">→</span>
+            EXPLORE <span className="btn__arrow">→</span>
           </button>
           <button className="btn" onClick={() => go('#contact')} data-cursor="button">
             START A PROJECT

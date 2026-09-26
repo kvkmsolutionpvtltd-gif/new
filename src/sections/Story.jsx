@@ -88,35 +88,3 @@ export function CreativeSection() {
   );
 }
 
-/* 10. Woman developer scene */
-export function DeveloperSection() {
-  return (
-    <Section id="developer">
-      <div className="split">
-        <div>
-          <SectionHead
-            eyebrow="04 — At The Desk"
-            title="Real engineers. Real craft."
-            lead="A developer at a laptop, writing the code that turns a design into a working product. No theatrics — just focus, iteration and attention to detail."
-          />
-        </div>
-        <Reveal variant="right">
-          <div className="terminal" data-cursor>
-            <div className="terminal__bar">
-              <i style={{ background: '#ff5f56' }} />
-              <i style={{ background: '#ffbd2e' }} />
-              <i style={{ background: '#27c93f' }} />
-            </div>
-            <pre className="codeblock" style={{ border: 'none', background: 'transparent' }}>
-{`export function `}<span className="f">buildProduct</span>{`(idea) {
-  const `}<span className="n">design</span>{` = `}<span className="f">refine</span>{`(idea);
-  const `}<span className="n">code</span>{`   = `}<span className="f">engineer</span>{`(design);
-  `}<span className="k">return</span>{` `}<span className="f">deploy</span>{`(code);
-}`}
-            </pre>
-          </div>
-        </Reveal>
-      </div>
-    </Section>
-  );
-}
